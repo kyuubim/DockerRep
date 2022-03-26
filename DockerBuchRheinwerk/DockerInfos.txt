@@ -1,0 +1,94 @@
+2.4 Docker Rootless 
+dabei werden dem container die Rechte wie einem Benutzer vergen 
+Der Container wird dadruch sicherer gegen fehler in der Entwicklung 
+
+3.2  Container ausführen 
+„Container einmal starten und sofort wieder löschen
+Wenn Sie von vornherein wissen, dass Sie einen Container nur einmal ausführen und dann unmittelbar wieder löschen möchten, können Sie die zusätzliche Option --rm (mit zwei vorangestellten Bindestrichen) übergeben:
+
+docker run --rm hello-world
+
+Damit ersparen Sie sich spätere Aufräumarbeiten.“
+
+3.3 Container interaktive verwenden 
+„Die Optionen -i und -t beschreiben die Funktion des run-Kommandos weiter:
+-i bedeutet, dass der Container interaktiv ausgeführt und mit der Standardeingabe verbunden werden soll.
+Wegen -t verwendet Docker einen Pseudo-Terminalemulator (Pseudo-TTY) und verbindet diesen mit der Standardeingabe.    
+Die Kombination dieser beiden Optionen ist erforderlich, wenn ein Container in einem Terminal- oder PowerShell-Fenster interaktiv bedient werden soll. In der Regel wird -i und -t zu -it abgekürzt.“
+
+hostname -i gibt die Adresse des container an 
+
+
+docker start -i id gibt einen interaktiven zugriff 
+
+
+„docker start -i musing_kilby 
+ root@168a2ec648f0:/# ls -l abc  
+   -rw-r--r--. 1 root root 0 Mar 10 15:27 abc  
+   root@168a2ec648f0:/# exit“
+
+„docker run -it --name myubuntu -h myubuntu ubuntu  
+root@myubuntu:/#  ...  
+root@myubuntu:/# exit“
+
+„docker exec -it myubuntu /usr/bin/top
+            Sie können auch mehrere Shell-Sessions parallel ausführen:
+            
+ docker exec -it myubuntu /bin/bash“
+
+
+„docker exec bietet Ihnen die Möglichkeit, parallel zu einem laufenden 
+Container beliebige weitere Prozesse zu starten. docker exec 
+ist primär zum Debugging gedacht, kann aber universell eingesetzt werden.“
+
+
+3.4 Portweiterleitung von containern
+
+MariaDB-    CLIENT aufrufen 
+....
+docker exec -it <namecontainer> <namevolumen> -u root -p 
+show status 
+
+in den container rein schauen 
+ docker exec -it mydb /bin/bash
+root@95e4ec974b68:/# cat /etc/os-release 
+
+mysqld --version
+
+
+Aufräumen 
+
+„docker inspect -f '{{ .Mounts }}' mariadb-test  
+[{volume d19f5b86...  ...  /var/lib/mysql local  true }]  
+docker stop mariadb-test
+docker rm mariadb-test
+docker volume rm d19f5b86...“
+
+
+3.6 Volumen mit namen 
+
+„docker run -d --name mariadb-test \           
+-v myvolume:/var/lib/mysql \          
+ -e MYSQL_ROOT_PASSWORD=geheim mariadb
+    
+     An der Anwendung von MariaDB ändert sich nichts. 
+     Die Administration des Volumes wird aber einfacher. 
+     docker inspect und docker system df zeigen statt einer 
+     ID den Namen des Volumes an:
+
+docker inspect -f '{{ .Mounts }}' mariadb-test  
+[{volume myvolume    
+ /home/kofler/.local/share/docker/volumes/myvolume/_data     
+ /var/lib/mysql local z true }]    
+ 
+ docker system df -v  ...  VOLUME NAME   LINKS     SIZE  myvolume      1         136.8MB“
+
+container update ohne datenverlust
+
+docker stop <containername>
+docker rm ""
+docker pull <origin image>
+docker run -d --name x -v myvolume:/var/lib/myqsl <namevolumen>
+
+
+3.7 Volumen im eigenen Verzeichnis 
