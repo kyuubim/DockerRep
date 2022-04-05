@@ -1,0 +1,8 @@
+#Datei: /hello-swarm/swarmstuff/docker-compose.yml
+version: '3'
+services:
+  web:
+    image: swarmfile:latest
+    build: hello-swarm/    
+    ports:
+      - "8080:8080"
